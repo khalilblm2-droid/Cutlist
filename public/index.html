@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قائمة الأغاني - Cutlist</title>
+    <style>
+        body { font-family: system-ui; background: #0f172a; color: white; text-align: center; padding: 50px; }
+        h1 { color: #38bdf8; }
+        input, button { padding: 12px; margin: 10px; border-radius: 8px; border: none; font-size: 16px; }
+        button { background: #38bdf8; color: #0f172a; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>قائمة الأغاني</h1>
+    <p>ارفع فيديو طويل وسنقصه لك لمقاطع قصيرة بالذكاء الاصطناعي</p>
+    <input type="file" id="videoFile" accept="video/*">
+    <button onclick="uploadVideo()">ارفع الفيديو</button>
+    <p id="status"></p>
+
+    <script>
+        async function uploadVideo() {
+            const fileInput = document.getElementById('videoFile');
+            const status = document.getElementById('status');
+            if (!fileInput.files[0]) {
+                status.textContent = 'اختر فيديو أولاً';
+                return;
+            }
+            status.textContent = 'جاري الرفع...';
+            const formData = new FormData();
+            formData.append('video', fileInput.files[0]);
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            status.textContent = data.message;
+        }
+    </script>
+</body>
+</html>
